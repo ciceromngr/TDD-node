@@ -1,0 +1,8 @@
+{
+  "name": "TDD-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/ciceromngr/TDD-node.git",
+  "author": "Cicero Romao <cicerotransformice@gmail.com>",
+  "license": "MIT"
+}
