@@ -31,11 +31,10 @@ describe('CheckLastEventStatus', () => {
     it('should get last event data', () => {
 
         const loadLastEventRepository = new LoadLastEventRepositoryMock()
-        const checkLastEventStatus = new CheckLastEventStatus(loadLastEventRepository)
-        checkLastEventStatus.perform('any_group_id')
+        const sut = new CheckLastEventStatus(loadLastEventRepository)
+        sut.perform('any_group_id')
         expect(loadLastEventRepository.groupId).toBe('any_group_id')
         expect(loadLastEventRepository.callsCount).toBe(1)
 
     })
-
 })
