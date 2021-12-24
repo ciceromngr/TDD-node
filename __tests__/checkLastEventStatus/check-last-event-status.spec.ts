@@ -1,16 +1,18 @@
 import { set, reset } from 'mockdate'
 
+type EventStatus = { status: string }
+
 class CheckLastEventStatus {
 
     constructor(
         private loadLastEventRepository: LoadLastEventRepository
     ) { }
 
-    async perform({ groupId }: { groupId: string }): Promise<string> {
+    async perform({ groupId }: { groupId: string }): Promise<EventStatus> {
         const event = await this.loadLastEventRepository.loadLastEvent({ groupId })
-        if (event === undefined) return 'done'
+        if (event === undefined) return { status: 'done' }
         const now = new Date()
-        return event.endDate < now ? 'inReview': 'active'
+        return event.endDate < now ? { status: 'inReview' } : { status: 'active' }
     }
 
 }
@@ -66,8 +68,8 @@ describe('CheckLastEventStatus', () => {
 
         const { sut, loadLastEventRepository } = makeSut()
         loadLastEventRepository.output = undefined
-        const status = await sut.perform({ groupId })
-        expect(status).toBe('done')
+        const eventStatus = await sut.perform({ groupId })
+        expect(eventStatus.status).toBe('done')
 
     })
 
@@ -77,8 +79,8 @@ describe('CheckLastEventStatus', () => {
         loadLastEventRepository.output = {
             endDate: new Date(new Date().getTime() + 1)
         }
-        const status = await sut.perform({ groupId })
-        expect(status).toBe('active')
+        const eventStatus = await sut.perform({ groupId })
+        expect(eventStatus.status).toBe('active')
 
     })
 
@@ -88,8 +90,8 @@ describe('CheckLastEventStatus', () => {
         loadLastEventRepository.output = {
             endDate: new Date(new Date().getTime() - 1)
         }
-        const status = await sut.perform({ groupId })
-        expect(status).toBe('inReview')
+        const eventStatus = await sut.perform({ groupId })
+        expect(eventStatus.status).toBe('inReview')
 
     })
 })
